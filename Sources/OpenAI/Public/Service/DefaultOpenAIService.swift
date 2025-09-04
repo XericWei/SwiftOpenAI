@@ -15,6 +15,7 @@ struct DefaultOpenAIService: OpenAIService {
     proxyPath: String? = nil,
     overrideVersion: String? = nil,
     extraHeaders: [String: String]? = nil,
+    initialQueryItems: [URLQueryItem]? = nil,
     httpClient: HTTPClient,
     decoder: JSONDecoder = .init(),
     debugEnabled: Bool)
@@ -24,6 +25,7 @@ struct DefaultOpenAIService: OpenAIService {
     self.apiKey = .bearer(apiKey)
     self.organizationID = organizationID
     self.extraHeaders = extraHeaders
+    self.extraQueryItems = initialQueryItems ?? .init()
     openAIEnvironment = OpenAIEnvironment(
       baseURL: baseURL ?? "https://api.openai.com",
       proxyPath: proxyPath,
@@ -92,6 +94,7 @@ struct DefaultOpenAIService: OpenAIService {
       organizationID: organizationID,
       method: .post,
       params: chatParameters,
+      queryItems: extraQueryItems,
       extraHeaders: extraHeaders)
     return try await fetch(debugEnabled: debugEnabled, type: ChatCompletionObject.self, with: request)
   }
@@ -108,6 +111,7 @@ struct DefaultOpenAIService: OpenAIService {
       organizationID: organizationID,
       method: .post,
       params: chatParameters,
+      queryItems: extraQueryItems,
       extraHeaders: extraHeaders)
     return try await fetchStream(debugEnabled: debugEnabled, type: ChatCompletionChunkObject.self, with: request)
   }
@@ -1305,4 +1309,6 @@ struct DefaultOpenAIService: OpenAIService {
   private let debugEnabled: Bool
   /// Extra headers for the request.
   private let extraHeaders: [String: String]?
+  /// Initial query items for the request.
+  private let extraQueryItems: [URLQueryItem]
 }
