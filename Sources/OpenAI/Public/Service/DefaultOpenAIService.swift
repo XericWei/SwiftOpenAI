@@ -15,7 +15,7 @@ struct DefaultOpenAIService: OpenAIService {
     proxyPath: String? = nil,
     overrideVersion: String? = nil,
     extraHeaders: [String: String]? = nil,
-    initialQueryItems: [URLQueryItem]? = nil,
+    extraQueryItems: [URLQueryItem]? = nil,
     httpClient: HTTPClient,
     decoder: JSONDecoder = .init(),
     debugEnabled: Bool)
@@ -25,7 +25,7 @@ struct DefaultOpenAIService: OpenAIService {
     self.apiKey = .bearer(apiKey)
     self.organizationID = organizationID
     self.extraHeaders = extraHeaders
-    self.extraQueryItems = initialQueryItems ?? .init()
+    self.extraQueryItems = extraQueryItems ?? .init()
     openAIEnvironment = OpenAIEnvironment(
       baseURL: baseURL ?? "https://api.openai.com",
       proxyPath: proxyPath,

@@ -163,4 +163,43 @@ public class OpenAIServiceFactory {
       httpClient: client,
       debugEnabled: debugEnabled)
   }
+
+  /// Creates and returns an instance of `OpenAIService`.
+  ///
+  /// Use this service if you need to provide a custom URL with a proxy path, for example to run Groq.
+  /// Check [Ollama blog post](https://ollama.com/blog/openai-compatibility) for more.
+  ///
+  /// - Parameters:
+  ///   - apiKey: The optional API key required for authentication.
+  ///   - baseURL: The local host URL.  e.g "https://api.groq.com" or "https://generativelanguage.googleapis.com"
+  ///   - proxyPath: The proxy path e.g `openai`
+  ///   - overrideVersion: The API version. defaults to `v1`
+  ///   - extraHeaders: Additional headers needed for the request. Do not provide API key in these headers.
+  ///   - extraQueryItems: Additional query items needed for the request.
+  ///   - httpClient: The HTTPClient to be used for network calls. Defaults to `HTTPClientFactory.createDefault()`
+  ///   - debugEnabled: If `true` service prints event on DEBUG builds, default to `false`.
+  ///
+  /// - Returns: A fully configured object conforming to `OpenAIService`.
+  public static func service(
+    apiKey: String,
+    overrideBaseURL: String,
+    proxyPath: String? = nil,
+    overrideVersion: String? = nil,
+    extraHeaders: [String: String]? = nil,
+    extraQueryItems: [URLQueryItem]? = nil,
+    httpClient: HTTPClient? = nil,
+    debugEnabled: Bool = false)
+    -> OpenAIService
+  {
+    let client = httpClient ?? HTTPClientFactory.createDefault()
+    return DefaultOpenAIService(
+      apiKey: apiKey,
+      baseURL: overrideBaseURL,
+      proxyPath: proxyPath,
+      overrideVersion: overrideVersion,
+      extraHeaders: extraHeaders,
+      extraQueryItems: extraQueryItems,
+      httpClient: client,
+      debugEnabled: debugEnabled)
+  }
 }
